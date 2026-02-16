@@ -1,0 +1,334 @@
+/* ===========================================================
+   Whack-a-Mole — Tk / Tix Inspired Browser Styles
+   =========================================================== */
+
+/* --- Reset & Base --- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  /* Classic Tk colours */
+  --tk-bg:        #d9d9d9;
+  --tk-bg-dark:   #c0c0c0;
+  --tk-bg-light:  #ececec;
+  --tk-border-hi: #ffffff;
+  --tk-border-lo: #808080;
+  --tk-border-dk: #404040;
+  --tk-fg:        #000000;
+  --tk-select:    #0078d7;
+  --tk-font:      'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --tk-mono:      'Consolas', 'Courier New', monospace;
+  --hole-bg:      #5c4033;
+  --hole-shadow:  #3a2518;
+  --mole-color:   #8B6914;
+  --mole-nose:    #ff6b8a;
+  --gold-color:   #ffd700;
+}
+
+body {
+  font-family: var(--tk-font);
+  font-size: 13px;
+  background: #008080;  /* Classic teal desktop */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 16px;
+}
+
+/* --- Tk Window --- */
+.tk-window {
+  width: 520px;
+  max-width: 100%;
+  background: var(--tk-bg);
+  border: 2px solid;
+  border-color: var(--tk-border-hi) var(--tk-border-dk) var(--tk-border-dk) var(--tk-border-hi);
+  box-shadow: 2px 2px 8px rgba(0,0,0,0.35);
+}
+
+/* --- Title Bar --- */
+.tk-titlebar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 4px;
+  background: linear-gradient(90deg, #000080, #1084d0);
+  color: #fff;
+  font-weight: bold;
+  font-size: 12px;
+  user-select: none;
+}
+.tk-titlebar-icon { font-size: 14px; }
+.tk-titlebar-text { flex: 1; }
+.tk-titlebar-buttons { display: flex; gap: 2px; }
+.tk-titlebar-buttons span {
+  display: inline-flex; justify-content: center; align-items: center;
+  width: 18px; height: 16px;
+  background: var(--tk-bg);
+  border: 1px solid;
+  border-color: var(--tk-border-hi) var(--tk-border-lo) var(--tk-border-lo) var(--tk-border-hi);
+  color: #000; font-size: 11px; cursor: default;
+}
+.tk-titlebar-buttons span:active {
+  border-color: var(--tk-border-lo) var(--tk-border-hi) var(--tk-border-hi) var(--tk-border-lo);
+}
+
+/* --- Menu Bar --- */
+.tk-menubar {
+  display: flex;
+  gap: 0;
+  padding: 1px 0;
+  background: var(--tk-bg);
+  border-bottom: 1px solid var(--tk-border-lo);
+}
+.tk-menu-item {
+  padding: 2px 10px;
+  cursor: default;
+  font-size: 12px;
+}
+.tk-menu-item:hover {
+  background: var(--tk-select);
+  color: #fff;
+}
+
+/* --- Frames --- */
+.tk-frame {
+  margin: 4px;
+  padding: 6px;
+  border: 2px solid;
+  border-color: var(--tk-border-hi) var(--tk-border-lo) var(--tk-border-lo) var(--tk-border-hi);
+  background: var(--tk-bg-light);
+}
+
+/* --- Label Frames --- */
+.tk-status-frame {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+}
+.tk-labelframe {
+  flex: 1;
+  border: 2px groove var(--tk-bg-dark);
+  padding: 6px 8px 8px;
+  position: relative;
+  text-align: center;
+}
+.tk-labelframe-title {
+  position: absolute;
+  top: -8px; left: 8px;
+  background: var(--tk-bg-light);
+  padding: 0 4px;
+  font-size: 10px;
+  color: #555;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+.tk-display {
+  font-family: var(--tk-mono);
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--tk-fg);
+  background: #fff;
+  border: 1px solid;
+  border-color: var(--tk-border-lo) var(--tk-border-hi) var(--tk-border-hi) var(--tk-border-lo);
+  padding: 4px 0;
+}
+
+/* --- Game Board --- */
+.tk-game-frame {
+  position: relative;
+  padding: 12px;
+}
+
+.mole-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+/* Hole */
+.hole {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  background:
+    radial-gradient(ellipse 90% 40% at 50% 85%, var(--hole-shadow) 0%, transparent 100%),
+    radial-gradient(ellipse 100% 50% at 50% 80%, var(--hole-bg) 0%, transparent 100%),
+    var(--tk-bg-light);
+  border: 2px solid;
+  border-color: var(--tk-border-lo) var(--tk-border-hi) var(--tk-border-hi) var(--tk-border-lo);
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: crosshair;
+  user-select: none;
+}
+
+/* Mole */
+.mole {
+  position: absolute;
+  bottom: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70%;
+  height: 65%;
+  transition: bottom 0.15s ease-out;
+  pointer-events: none;
+}
+.mole.show {
+  bottom: 10%;
+}
+.mole.whacked {
+  bottom: 10%;
+  animation: whackShake 0.3s ease;
+}
+
+/* Mole SVG body */
+.mole-body {
+  width: 100%; height: 100%;
+  position: relative;
+}
+.mole-head {
+  width: 80%; height: 70%;
+  margin: 0 auto;
+  background: var(--mole-color);
+  border-radius: 50% 50% 45% 45%;
+  position: relative;
+  border: 2px solid #5a4010;
+}
+.mole.gold .mole-head {
+  background: var(--gold-color);
+  border-color: #b8960f;
+  box-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
+}
+.mole-eyes {
+  position: absolute;
+  top: 32%; left: 50%;
+  transform: translateX(-50%);
+  display: flex; gap: 16px;
+}
+.mole-eye {
+  width: 10px; height: 12px;
+  background: #000;
+  border-radius: 50%;
+}
+.mole.whacked .mole-eye {
+  width: 12px; height: 3px;
+  border-radius: 0;
+  transform: rotate(-5deg);
+}
+.mole-nose {
+  position: absolute;
+  top: 52%; left: 50%;
+  transform: translateX(-50%);
+  width: 14px; height: 10px;
+  background: var(--mole-nose);
+  border-radius: 50%;
+}
+.mole-mouth {
+  position: absolute;
+  top: 68%; left: 50%;
+  transform: translateX(-50%);
+  width: 20px; height: 8px;
+  border-bottom: 2px solid #5a4010;
+  border-radius: 0 0 50% 50%;
+}
+.mole.whacked .mole-mouth {
+  border-bottom: none;
+  border-top: 2px solid #5a4010;
+  border-radius: 50% 50% 0 0;
+  width: 24px; height: 10px;
+  top: 65%;
+}
+
+/* Score popup */
+.score-popup {
+  position: absolute;
+  top: 20%; left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--tk-mono);
+  font-size: 18px;
+  font-weight: bold;
+  pointer-events: none;
+  animation: popUp 0.6s ease forwards;
+  z-index: 10;
+}
+.score-popup.hit  { color: #2e7d32; }
+.score-popup.miss { color: #c62828; }
+.score-popup.gold { color: #b8860b; }
+
+@keyframes popUp {
+  0%   { opacity: 1; transform: translateX(-50%) translateY(0); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-40px); }
+}
+@keyframes whackShake {
+  0%, 100% { transform: translateX(-50%) rotate(0); }
+  20%  { transform: translateX(-50%) rotate(-8deg); }
+  40%  { transform: translateX(-50%) rotate(8deg); }
+  60%  { transform: translateX(-50%) rotate(-4deg); }
+  80%  { transform: translateX(-50%) rotate(4deg); }
+}
+
+/* Overlay */
+.game-overlay {
+  position: absolute;
+  inset: 2px;
+  display: flex; justify-content: center; align-items: center;
+  background: rgba(236, 236, 236, 0.88);
+  border-radius: 4px;
+  z-index: 20;
+  transition: opacity 0.25s;
+}
+.game-overlay.hidden { opacity: 0; pointer-events: none; }
+.overlay-inner { text-align: center; }
+.overlay-inner h2 { font-size: 22px; margin-bottom: 8px; color: #333; }
+.overlay-inner p  { font-size: 13px; color: #555; }
+
+/* --- Buttons --- */
+.tk-control-frame {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+.tk-button {
+  font-family: var(--tk-font);
+  font-size: 12px;
+  padding: 4px 18px;
+  background: var(--tk-bg);
+  border: 2px solid;
+  border-color: var(--tk-border-hi) var(--tk-border-dk) var(--tk-border-dk) var(--tk-border-hi);
+  cursor: pointer;
+  outline: none;
+}
+.tk-button:active:not(:disabled) {
+  border-color: var(--tk-border-dk) var(--tk-border-hi) var(--tk-border-hi) var(--tk-border-dk);
+  padding: 5px 17px 3px 19px;
+}
+.tk-button:disabled { color: #888; cursor: default; }
+.tk-button-primary {
+  background: #e4e4e4;
+  font-weight: bold;
+}
+.tk-button:focus-visible {
+  outline: 1px dotted #000;
+  outline-offset: -4px;
+}
+
+/* --- Status Bar --- */
+.tk-statusbar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 2px 6px;
+  border-top: 1px solid var(--tk-border-lo);
+  font-size: 11px;
+  color: #555;
+  background: var(--tk-bg);
+}
+.tk-grip { color: #999; font-size: 10px; cursor: default; }
+
+/* --- Responsive --- */
+@media (max-width: 540px) {
+  .tk-window { width: 100%; }
+  .tk-status-frame { flex-wrap: wrap; }
+  .tk-labelframe { min-width: 45%; }
+  .mole-grid { gap: 8px; }
+}
