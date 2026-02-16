@@ -1,33 +1,73 @@
 /* ===========================================================
-   Whack-a-Mole — Tk / Tix Inspired Browser Styles
+   Whack-a-Mole — Plastic Toy Edition + Mjölnir Cursor
    =========================================================== */
 
 /* --- Reset & Base --- */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  /* Classic Tk colours */
-  --tk-bg:        #d9d9d9;
-  --tk-bg-dark:   #c0c0c0;
-  --tk-bg-light:  #ececec;
-  --tk-border-hi: #ffffff;
-  --tk-border-lo: #808080;
-  --tk-border-dk: #404040;
-  --tk-fg:        #000000;
-  --tk-select:    #0078d7;
-  --tk-font:      'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-  --tk-mono:      'Consolas', 'Courier New', monospace;
-  --hole-bg:      #5c4033;
-  --hole-shadow:  #3a2518;
-  --mole-color:   #8B6914;
-  --mole-nose:    #ff6b8a;
-  --gold-color:   #ffd700;
+  /* Plastic toy palette */
+  --toy-red:       #E53935;
+  --toy-red-light: #FF6F61;
+  --toy-red-dark:  #B71C1C;
+  --toy-blue:      #1E88E5;
+  --toy-blue-light:#64B5F6;
+  --toy-blue-dark: #0D47A1;
+  --toy-green:     #43A047;
+  --toy-green-lt:  #66BB6A;
+  --toy-green-dk:  #1B5E20;
+  --toy-yellow:    #FDD835;
+  --toy-yellow-lt: #FFF176;
+  --toy-yellow-dk: #F9A825;
+  --toy-orange:    #FB8C00;
+  --toy-purple:    #8E24AA;
+  --toy-body:      #E8D44D;
+  --toy-body-lt:   #F0E06A;
+  --toy-body-dk:   #C9A800;
+  --toy-bezel:     #D32F2F;
+  --toy-bezel-lt:  #EF5350;
+  --toy-bezel-dk:  #9A0007;
+  --toy-cream:     #FFF8E1;
+  --toy-brown:     #5D4037;
+  --toy-brown-lt:  #795548;
+  --hole-bg:       #3E2723;
+  --hole-rim:      #4E342E;
+  --mole-body:     #A1887F;
+  --mole-body-dk:  #795548;
+  --mole-belly:    #D7CCC8;
+  --mole-nose:     #FF80AB;
+  --gold-color:    #FFD740;
+  --gold-glow:     rgba(255,215,64,0.5);
+
+  --font-title: 'Lilita One', 'Impact', sans-serif;
+  --font-body:  'Nunito', 'Segoe UI', sans-serif;
+  --font-mono:  'Consolas', 'Courier New', monospace;
+}
+
+/* --- Cursors (Thor's Hammer) --- */
+body, .toy-cabinet {
+  cursor: url('../assets/hammer-cursor.svg') 16 4, auto;
+}
+.hole {
+  cursor: url('../assets/hammer-cursor.svg') 16 4, crosshair;
+}
+.hole:active,
+body.hammer-active .hole {
+  cursor: url('../assets/hammer-active.svg') 8 4, crosshair;
+}
+body:active {
+  cursor: url('../assets/hammer-active.svg') 8 4, auto;
 }
 
 body {
-  font-family: var(--tk-font);
-  font-size: 13px;
-  background: #008080;  /* Classic teal desktop */
+  font-family: var(--font-body);
+  font-size: 14px;
+  /* Playful background pattern */
+  background:
+    radial-gradient(circle at 20% 30%, #43CEA2 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, #FCEABB 0%, transparent 50%),
+    linear-gradient(135deg, #185A9D 0%, #43CEA2 100%);
+  background-attachment: fixed;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -35,136 +75,171 @@ body {
   padding: 16px;
 }
 
-/* --- Tk Window --- */
-.tk-window {
-  width: 520px;
+/* ===========================================================
+   PLASTIC TOY CABINET
+   =========================================================== */
+.toy-cabinet {
+  width: 540px;
   max-width: 100%;
-  background: var(--tk-bg);
-  border: 2px solid;
-  border-color: var(--tk-border-hi) var(--tk-border-dk) var(--tk-border-dk) var(--tk-border-hi);
-  box-shadow: 2px 2px 8px rgba(0,0,0,0.35);
+  background: linear-gradient(180deg, var(--toy-body-lt) 0%, var(--toy-body) 40%, var(--toy-body-dk) 100%);
+  border-radius: 24px;
+  border: 4px solid var(--toy-bezel-dk);
+  box-shadow:
+    inset 0 2px 0 var(--toy-body-lt),
+    inset 0 -2px 0 var(--toy-body-dk),
+    0 8px 32px rgba(0,0,0,0.35),
+    0 2px 8px rgba(0,0,0,0.2);
+  overflow: hidden;
+  /* Glossy plastic sheen */
+  position: relative;
+}
+.toy-cabinet::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 10%; right: 10%;
+  height: 40%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 100%);
+  border-radius: 24px 24px 50% 50%;
+  pointer-events: none;
+  z-index: 50;
 }
 
-/* --- Title Bar --- */
-.tk-titlebar {
+/* ===========================================================
+   TOP BANNER
+   =========================================================== */
+.toy-banner {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 3px 4px;
-  background: linear-gradient(90deg, #000080, #1084d0);
-  color: #fff;
-  font-weight: bold;
-  font-size: 12px;
-  user-select: none;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 16px 10px;
+  background: linear-gradient(180deg, var(--toy-bezel-lt), var(--toy-bezel), var(--toy-bezel-dk));
+  border-bottom: 3px solid var(--toy-bezel-dk);
+  position: relative;
 }
-.tk-titlebar-icon { font-size: 14px; }
-.tk-titlebar-text { flex: 1; }
-.tk-titlebar-buttons { display: flex; gap: 2px; }
-.tk-titlebar-buttons span {
-  display: inline-flex; justify-content: center; align-items: center;
-  width: 18px; height: 16px;
-  background: var(--tk-bg);
-  border: 1px solid;
-  border-color: var(--tk-border-hi) var(--tk-border-lo) var(--tk-border-lo) var(--tk-border-hi);
-  color: #000; font-size: 11px; cursor: default;
+.toy-title {
+  font-family: var(--font-title);
+  font-size: 32px;
+  color: var(--toy-yellow);
+  text-shadow:
+    2px 2px 0 var(--toy-yellow-dk),
+    -1px -1px 0 rgba(0,0,0,0.3),
+    0 0 20px rgba(255,215,0,0.3);
+  letter-spacing: 3px;
 }
-.tk-titlebar-buttons span:active {
-  border-color: var(--tk-border-lo) var(--tk-border-hi) var(--tk-border-hi) var(--tk-border-lo);
+/* Decorative plastic bulbs */
+.banner-bulb {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fff 0%, var(--toy-yellow) 50%, var(--toy-orange) 100%);
+  border: 2px solid var(--toy-yellow-dk);
+  box-shadow: 0 0 6px rgba(255,215,0,0.4);
+  animation: bulbPulse 1.5s ease-in-out infinite alternate;
 }
-
-/* --- Menu Bar --- */
-.tk-menubar {
-  display: flex;
-  gap: 0;
-  padding: 1px 0;
-  background: var(--tk-bg);
-  border-bottom: 1px solid var(--tk-border-lo);
-}
-.tk-menu-item {
-  padding: 2px 10px;
-  cursor: default;
-  font-size: 12px;
-}
-.tk-menu-item:hover {
-  background: var(--tk-select);
-  color: #fff;
+.banner-bulb:nth-child(2) { animation-delay: 0.3s; }
+.banner-bulb:nth-child(4) { animation-delay: 0.6s; }
+@keyframes bulbPulse {
+  0%   { box-shadow: 0 0 4px rgba(255,215,0,0.3); }
+  100% { box-shadow: 0 0 12px rgba(255,215,0,0.8); }
 }
 
-/* --- Frames --- */
-.tk-frame {
-  margin: 4px;
-  padding: 6px;
-  border: 2px solid;
-  border-color: var(--tk-border-hi) var(--tk-border-lo) var(--tk-border-lo) var(--tk-border-hi);
-  background: var(--tk-bg-light);
+/* ===========================================================
+   SCORE PANEL (gauges)
+   =========================================================== */
+.toy-panel {
+  margin: 8px 12px;
+  padding: 10px 12px;
+  background: linear-gradient(180deg, #D7CCC8, #BCAAA4);
+  border-radius: 14px;
+  border: 3px solid var(--toy-brown);
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,0.3),
+    inset 0 -2px 0 rgba(0,0,0,0.15),
+    0 2px 4px rgba(0,0,0,0.15);
 }
-
-/* --- Label Frames --- */
-.tk-status-frame {
+.score-panel {
   display: flex;
   justify-content: space-between;
-  gap: 6px;
+  gap: 8px;
 }
-.tk-labelframe {
+.toy-gauge {
   flex: 1;
-  border: 2px groove var(--tk-bg-dark);
-  padding: 6px 8px 8px;
-  position: relative;
   text-align: center;
 }
-.tk-labelframe-title {
-  position: absolute;
-  top: -8px; left: 8px;
-  background: var(--tk-bg-light);
-  padding: 0 4px;
-  font-size: 10px;
-  color: #555;
-  font-weight: 600;
-  letter-spacing: 0.5px;
+.gauge-label {
+  display: block;
+  font-family: var(--font-title);
+  font-size: 11px;
+  color: var(--toy-brown);
+  letter-spacing: 1.5px;
+  margin-bottom: 4px;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.5);
 }
-.tk-display {
-  font-family: var(--tk-mono);
-  font-size: 20px;
-  font-weight: bold;
-  color: var(--tk-fg);
-  background: #fff;
-  border: 1px solid;
-  border-color: var(--tk-border-lo) var(--tk-border-hi) var(--tk-border-hi) var(--tk-border-lo);
+.gauge-screen {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: 900;
+  color: #1B5E20;
+  background: linear-gradient(180deg, #C8E6C9, #A5D6A7);
+  border: 2px solid #66BB6A;
+  border-radius: 8px;
   padding: 4px 0;
+  box-shadow:
+    inset 0 1px 3px rgba(0,0,0,0.2),
+    0 1px 0 rgba(255,255,255,0.4);
+  text-shadow: 0 1px 0 rgba(255,255,255,0.6);
 }
 
-/* --- Game Board --- */
-.tk-game-frame {
+/* ===========================================================
+   GAME BOARD
+   =========================================================== */
+.toy-board {
   position: relative;
-  padding: 12px;
+  margin: 8px 12px;
+  padding: 16px;
+  background:
+    repeating-conic-gradient(#81C784 0% 25%, #66BB6A 0% 50%) 0 0 / 20px 20px;
+  border-radius: 16px;
+  border: 4px solid var(--toy-green-dk);
+  box-shadow:
+    inset 0 3px 8px rgba(0,0,0,0.25),
+    inset 0 -2px 0 rgba(255,255,255,0.1),
+    0 2px 6px rgba(0,0,0,0.15);
 }
 
 .mole-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
+  gap: 14px;
   max-width: 420px;
   margin: 0 auto;
 }
 
-/* Hole */
+/* --- Hole (plastic recess) --- */
 .hole {
   position: relative;
   width: 100%;
   aspect-ratio: 1;
   background:
-    radial-gradient(ellipse 90% 40% at 50% 85%, var(--hole-shadow) 0%, transparent 100%),
-    radial-gradient(ellipse 100% 50% at 50% 80%, var(--hole-bg) 0%, transparent 100%),
-    var(--tk-bg-light);
-  border: 2px solid;
-  border-color: var(--tk-border-lo) var(--tk-border-hi) var(--tk-border-hi) var(--tk-border-lo);
-  border-radius: 8px;
+    radial-gradient(ellipse 100% 60% at 50% 90%, #1A1006 0%, transparent 70%),
+    radial-gradient(ellipse 85% 45% at 50% 75%, var(--hole-bg) 0%, transparent 90%),
+    linear-gradient(180deg, var(--hole-rim), var(--hole-bg));
+  border-radius: 50%;
+  border: 4px solid var(--toy-brown);
+  box-shadow:
+    inset 0 6px 16px rgba(0,0,0,0.6),
+    inset 0 -2px 4px rgba(255,255,255,0.05),
+    0 3px 0 var(--toy-brown-lt),
+    0 5px 8px rgba(0,0,0,0.2);
   overflow: hidden;
-  cursor: crosshair;
   user-select: none;
+  transition: transform 0.08s;
+}
+.hole:active {
+  transform: scale(0.96);
 }
 
-/* Mole */
+/* --- Mole (plastic figurine) --- */
 .mole {
   position: absolute;
   bottom: -100%;
@@ -172,163 +247,241 @@ body {
   transform: translateX(-50%);
   width: 70%;
   height: 65%;
-  transition: bottom 0.15s ease-out;
+  transition: bottom 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
   pointer-events: none;
 }
 .mole.show {
-  bottom: 10%;
+  bottom: 8%;
 }
 .mole.whacked {
-  bottom: 10%;
-  animation: whackShake 0.3s ease;
+  bottom: 8%;
+  animation: whackSmash 0.35s ease;
 }
 
-/* Mole SVG body */
 .mole-body {
   width: 100%; height: 100%;
   position: relative;
 }
 .mole-head {
-  width: 80%; height: 70%;
+  width: 82%; height: 72%;
   margin: 0 auto;
-  background: var(--mole-color);
-  border-radius: 50% 50% 45% 45%;
+  background: linear-gradient(160deg, #BCAAA4 0%, var(--mole-body) 40%, var(--mole-body-dk) 100%);
+  border-radius: 50% 50% 42% 42%;
   position: relative;
-  border: 2px solid #5a4010;
+  border: 3px solid var(--mole-body-dk);
+  box-shadow:
+    inset 0 -4px 8px rgba(0,0,0,0.15),
+    0 2px 6px rgba(0,0,0,0.3);
 }
-.mole.gold .mole-head {
-  background: var(--gold-color);
-  border-color: #b8960f;
-  box-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
-}
-.mole-eyes {
+/* Plastic highlight on mole head */
+.mole-head::before {
+  content: '';
   position: absolute;
-  top: 32%; left: 50%;
-  transform: translateX(-50%);
-  display: flex; gap: 16px;
-}
-.mole-eye {
-  width: 10px; height: 12px;
-  background: #000;
+  top: 8%; left: 20%;
+  width: 35%; height: 25%;
+  background: radial-gradient(ellipse, rgba(255,255,255,0.5) 0%, transparent 100%);
   border-radius: 50%;
 }
+
+/* Golden mole = shiny gold plastic */
+.mole.gold .mole-head {
+  background: linear-gradient(160deg, #FFF59D 0%, var(--gold-color) 40%, #F9A825 100%);
+  border-color: #E65100;
+  box-shadow:
+    inset 0 -4px 8px rgba(0,0,0,0.15),
+    0 0 16px var(--gold-glow),
+    0 2px 6px rgba(0,0,0,0.3);
+}
+
+.mole-eyes {
+  position: absolute;
+  top: 30%; left: 50%;
+  transform: translateX(-50%);
+  display: flex; gap: 14px;
+}
+.mole-eye {
+  width: 11px; height: 13px;
+  background: radial-gradient(circle at 40% 35%, #333 60%, #000 100%);
+  border-radius: 50%;
+  border: 1.5px solid #222;
+  /* Plastic eyeball shine */
+  box-shadow: inset 2px 2px 2px rgba(255,255,255,0.6);
+}
 .mole.whacked .mole-eye {
-  width: 12px; height: 3px;
-  border-radius: 0;
+  width: 13px; height: 4px;
+  border-radius: 2px;
   transform: rotate(-5deg);
+  box-shadow: none;
 }
 .mole-nose {
   position: absolute;
-  top: 52%; left: 50%;
+  top: 50%; left: 50%;
   transform: translateX(-50%);
-  width: 14px; height: 10px;
-  background: var(--mole-nose);
+  width: 16px; height: 12px;
+  background: radial-gradient(circle at 40% 35%, #FF80AB, var(--mole-nose));
   border-radius: 50%;
+  border: 1.5px solid #E91E63;
 }
 .mole-mouth {
   position: absolute;
-  top: 68%; left: 50%;
+  top: 66%; left: 50%;
   transform: translateX(-50%);
   width: 20px; height: 8px;
-  border-bottom: 2px solid #5a4010;
+  border-bottom: 2.5px solid var(--mole-body-dk);
   border-radius: 0 0 50% 50%;
 }
 .mole.whacked .mole-mouth {
   border-bottom: none;
-  border-top: 2px solid #5a4010;
+  border-top: 2.5px solid var(--mole-body-dk);
   border-radius: 50% 50% 0 0;
-  width: 24px; height: 10px;
-  top: 65%;
+  width: 26px; height: 12px;
+  top: 63%;
 }
 
-/* Score popup */
+/* --- Score popup --- */
 .score-popup {
   position: absolute;
-  top: 20%; left: 50%;
+  top: 15%; left: 50%;
   transform: translateX(-50%);
-  font-family: var(--tk-mono);
-  font-size: 18px;
+  font-family: var(--font-title);
+  font-size: 20px;
   font-weight: bold;
   pointer-events: none;
-  animation: popUp 0.6s ease forwards;
+  animation: popBounce 0.65s ease forwards;
   z-index: 10;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
 }
-.score-popup.hit  { color: #2e7d32; }
-.score-popup.miss { color: #c62828; }
-.score-popup.gold { color: #b8860b; }
+.score-popup.hit  { color: #2E7D32; }
+.score-popup.miss { color: #C62828; }
+.score-popup.gold { color: #E65100; }
 
-@keyframes popUp {
-  0%   { opacity: 1; transform: translateX(-50%) translateY(0); }
-  100% { opacity: 0; transform: translateX(-50%) translateY(-40px); }
+@keyframes popBounce {
+  0%   { opacity: 1; transform: translateX(-50%) translateY(0) scale(1.3); }
+  40%  { transform: translateX(-50%) translateY(-20px) scale(1); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-45px) scale(0.8); }
 }
-@keyframes whackShake {
-  0%, 100% { transform: translateX(-50%) rotate(0); }
-  20%  { transform: translateX(-50%) rotate(-8deg); }
-  40%  { transform: translateX(-50%) rotate(8deg); }
-  60%  { transform: translateX(-50%) rotate(-4deg); }
-  80%  { transform: translateX(-50%) rotate(4deg); }
+@keyframes whackSmash {
+  0%   { transform: translateX(-50%) rotate(0) scale(1); }
+  15%  { transform: translateX(-50%) rotate(-10deg) scale(0.9); }
+  30%  { transform: translateX(-50%) rotate(8deg) scale(0.92); }
+  50%  { transform: translateX(-50%) rotate(-5deg) scale(0.95); }
+  70%  { transform: translateX(-50%) rotate(3deg) scale(0.98); }
+  100% { transform: translateX(-50%) rotate(0) scale(1); }
 }
 
-/* Overlay */
+/* --- Overlay --- */
 .game-overlay {
   position: absolute;
-  inset: 2px;
+  inset: 4px;
   display: flex; justify-content: center; align-items: center;
-  background: rgba(236, 236, 236, 0.88);
-  border-radius: 4px;
+  background: rgba(255, 248, 225, 0.92);
+  border-radius: 14px;
   z-index: 20;
-  transition: opacity 0.25s;
+  transition: opacity 0.3s;
+  backdrop-filter: blur(2px);
 }
 .game-overlay.hidden { opacity: 0; pointer-events: none; }
 .overlay-inner { text-align: center; }
-.overlay-inner h2 { font-size: 22px; margin-bottom: 8px; color: #333; }
-.overlay-inner p  { font-size: 13px; color: #555; }
+.overlay-inner h2 {
+  font-family: var(--font-title);
+  font-size: 26px;
+  color: var(--toy-red);
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 0 rgba(0,0,0,0.1);
+}
+.overlay-inner p {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--toy-brown);
+  line-height: 1.8;
+}
 
-/* --- Buttons --- */
-.tk-control-frame {
+/* ===========================================================
+   TOY BUTTONS (chunky plastic pill-shape)
+   =========================================================== */
+.control-panel {
   display: flex;
   justify-content: center;
-  gap: 8px;
+  gap: 10px;
 }
-.tk-button {
-  font-family: var(--tk-font);
-  font-size: 12px;
-  padding: 4px 18px;
-  background: var(--tk-bg);
-  border: 2px solid;
-  border-color: var(--tk-border-hi) var(--tk-border-dk) var(--tk-border-dk) var(--tk-border-hi);
-  cursor: pointer;
+.toy-btn {
+  font-family: var(--font-title);
+  font-size: 14px;
+  letter-spacing: 1px;
+  padding: 8px 22px;
+  border-radius: 28px;
+  border: 3px solid;
+  cursor: url('../assets/hammer-cursor.svg') 16 4, pointer;
   outline: none;
+  position: relative;
+  transition: transform 0.1s, box-shadow 0.1s;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.3);
 }
-.tk-button:active:not(:disabled) {
-  border-color: var(--tk-border-dk) var(--tk-border-hi) var(--tk-border-hi) var(--tk-border-dk);
-  padding: 5px 17px 3px 19px;
+.toy-btn::before {
+  /* Glossy plastic highlight */
+  content: '';
+  position: absolute;
+  top: 2px; left: 15%; right: 15%;
+  height: 40%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.45) 0%, transparent 100%);
+  border-radius: 28px 28px 50% 50%;
+  pointer-events: none;
 }
-.tk-button:disabled { color: #888; cursor: default; }
-.tk-button-primary {
-  background: #e4e4e4;
-  font-weight: bold;
+.toy-btn:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
 }
-.tk-button:focus-visible {
-  outline: 1px dotted #000;
-  outline-offset: -4px;
+.toy-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
 }
 
-/* --- Status Bar --- */
-.tk-statusbar {
+.toy-btn-green {
+  background: linear-gradient(180deg, var(--toy-green-lt), var(--toy-green));
+  border-color: var(--toy-green-dk);
+  color: #fff;
+  box-shadow: 0 4px 0 var(--toy-green-dk), 0 6px 12px rgba(0,0,0,0.2);
+}
+.toy-btn-yellow {
+  background: linear-gradient(180deg, var(--toy-yellow-lt), var(--toy-yellow));
+  border-color: var(--toy-yellow-dk);
+  color: var(--toy-brown);
+  box-shadow: 0 4px 0 var(--toy-yellow-dk), 0 6px 12px rgba(0,0,0,0.2);
+}
+.toy-btn-red {
+  background: linear-gradient(180deg, var(--toy-red-light), var(--toy-red));
+  border-color: var(--toy-red-dark);
+  color: #fff;
+  box-shadow: 0 4px 0 var(--toy-red-dark), 0 6px 12px rgba(0,0,0,0.2);
+}
+
+/* ===========================================================
+   FOOTER STRIP
+   =========================================================== */
+.toy-footer {
   display: flex; justify-content: space-between; align-items: center;
-  padding: 2px 6px;
-  border-top: 1px solid var(--tk-border-lo);
+  padding: 6px 16px;
+  background: linear-gradient(180deg, var(--toy-body-dk), #B08D00);
   font-size: 11px;
-  color: #555;
-  background: var(--tk-bg);
+  color: var(--toy-brown);
+  border-top: 2px solid var(--toy-body-dk);
+  border-radius: 0 0 20px 20px;
 }
-.tk-grip { color: #999; font-size: 10px; cursor: default; }
+.footer-badge {
+  font-family: var(--font-title);
+  font-size: 10px;
+  color: var(--toy-blue);
+  letter-spacing: 1px;
+}
 
-/* --- Responsive --- */
-@media (max-width: 540px) {
-  .tk-window { width: 100%; }
-  .tk-status-frame { flex-wrap: wrap; }
-  .tk-labelframe { min-width: 45%; }
-  .mole-grid { gap: 8px; }
+/* ===========================================================
+   RESPONSIVE
+   =========================================================== */
+@media (max-width: 560px) {
+  .toy-cabinet { border-radius: 16px; }
+  .toy-title { font-size: 22px; }
+  .score-panel { flex-wrap: wrap; }
+  .toy-gauge { min-width: 44%; }
+  .mole-grid { gap: 10px; }
+  .toy-btn { padding: 6px 14px; font-size: 12px; }
 }

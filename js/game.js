@@ -1,6 +1,6 @@
 /*  ===========================================================
-    Whack-a-Mole — Game Engine
-    Browser-based  ·  Tk-style UI  ·  Zero Dependencies
+    Whack-a-Mole — Game Engine (Plastic Toy + Mjölnir Edition)
+    Browser-based  ·  Zero Dependencies
     =========================================================== */
 
 (() => {
@@ -41,13 +41,19 @@
   let running, paused;
   let holes = [];  // { el, moleEl, active, gold, timeout }
 
+  // ---- Hammer cursor active class ------------------------------
+  function flashHammer() {
+    document.body.classList.add('hammer-active');
+    setTimeout(() => document.body.classList.remove('hammer-active'), 120);
+  }
+
   // ---- Initialisation ------------------------------------------
   function init() {
     highScore = parseInt(localStorage.getItem('wam_high') || '0', 10);
     highEl.textContent = highScore;
     buildBoard();
     resetGame();
-    showOverlay('🔨 Whack-a-Mole', 'Click <b>Start</b> to play!');
+    showOverlay('🔨 WHACK-A-MOLE', 'Press <b>START</b> to play!');
   }
 
   function buildBoard() {
@@ -96,7 +102,7 @@
     clearTimeout(spawnTimeout);
     updateUI();
     btnPause.disabled = true;
-    btnPause.textContent = '⏸ Pause';
+    btnPause.textContent = '⏸ PAUSE';
     statusEl.textContent = 'Ready';
   }
 
@@ -130,7 +136,7 @@
     }
     btnPause.disabled = true;
     statusEl.textContent = 'Game over';
-    showOverlay('⏱ Time\'s Up!', `Final score: <b>${score}</b><br>Click <b>Start</b> to play again`);
+    showOverlay('⏱ TIME\'S UP!', `Final score: <b>${score}</b><br>Press <b>START</b> to play again`);
   }
 
   function togglePause() {
@@ -139,12 +145,12 @@
     if (paused) {
       clearTimeout(spawnTimeout);
       statusEl.textContent = 'Paused';
-      btnPause.textContent = '▶ Resume';
-      showOverlay('⏸ Paused', 'Click <b>Resume</b> to continue');
+      btnPause.textContent = '▶ RESUME';
+      showOverlay('⏸ PAUSED', 'Click <b>RESUME</b> to continue');
     } else {
       hideOverlay();
       statusEl.textContent = 'Game running...';
-      btnPause.textContent = '⏸ Pause';
+      btnPause.textContent = '⏸ PAUSE';
       scheduleSpawn();
     }
   }
@@ -199,6 +205,7 @@
   // ---- Click Handling -------------------------------------------
   function onHoleClick(hole) {
     if (!running || paused) return;
+    flashHammer();
 
     if (hole.active) {
       // HIT!
@@ -265,7 +272,7 @@
   btnPause.addEventListener('click', togglePause);
   btnReset.addEventListener('click', () => {
     resetGame();
-    showOverlay('🔨 Whack-a-Mole', 'Click <b>Start</b> to play!');
+    showOverlay('🔨 WHACK-A-MOLE', 'Press <b>START</b> to play!');
   });
 
   // ---- Keyboard shortcuts ---------------------------------------

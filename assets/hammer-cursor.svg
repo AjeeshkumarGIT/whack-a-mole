@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <!-- Thor's Hammer (Mjölnir) - resting cursor -->
+  <!-- Handle -->
+  <rect x="14" y="14" width="4" height="16" rx="1.5" fill="#8B4513" stroke="#5C2D0A" stroke-width="0.8"/>
+  <!-- Handle wrap -->
+  <rect x="13.5" y="26" width="5" height="3" rx="1" fill="#A0522D" stroke="#5C2D0A" stroke-width="0.5"/>
+  <!-- Hammer head -->
+  <rect x="4" y="4" width="24" height="12" rx="2" fill="#B0B0B0" stroke="#707070" stroke-width="1"/>
+  <!-- Hammer head shine -->
+  <rect x="5" y="5" width="22" height="4" rx="1" fill="#D0D0D0" opacity="0.5"/>
+  <!-- Hammer head side details -->
+  <rect x="4" y="8" width="4" height="7" rx="1" fill="#909090"/>
+  <rect x="24" y="8" width="4" height="7" rx="1" fill="#909090"/>
+  <!-- Norse knot (center decoration) -->
+  <circle cx="16" cy="10" r="3" fill="none" stroke="#4A90D9" stroke-width="1.2"/>
+  <circle cx="16" cy="10" r="1.2" fill="#4A90D9"/>
+</svg>

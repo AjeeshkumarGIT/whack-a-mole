@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <!-- Thor's Hammer (Mjölnir) - swinging/active cursor -->
+  <g transform="rotate(-30, 16, 16)">
+    <!-- Handle -->
+    <rect x="14" y="14" width="4" height="16" rx="1.5" fill="#8B4513" stroke="#5C2D0A" stroke-width="0.8"/>
+    <!-- Handle wrap -->
+    <rect x="13.5" y="26" width="5" height="3" rx="1" fill="#A0522D" stroke="#5C2D0A" stroke-width="0.5"/>
+    <!-- Hammer head -->
+    <rect x="4" y="4" width="24" height="12" rx="2" fill="#C0C0C0" stroke="#707070" stroke-width="1"/>
+    <!-- Hammer head shine -->
+    <rect x="5" y="5" width="22" height="4" rx="1" fill="#E0E0E0" opacity="0.6"/>
+    <!-- Hammer head side details -->
+    <rect x="4" y="8" width="4" height="7" rx="1" fill="#A0A0A0"/>
+    <rect x="24" y="8" width="4" height="7" rx="1" fill="#A0A0A0"/>
+    <!-- Norse knot - glowing on strike -->
+    <circle cx="16" cy="10" r="3" fill="none" stroke="#6BB5FF" stroke-width="1.5"/>
+    <circle cx="16" cy="10" r="1.5" fill="#6BB5FF"/>
+  </g>
+  <!-- Impact lines -->
+  <line x1="2" y1="2" x2="6" y2="6" stroke="#FFD700" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="0" y1="8" x2="5" y2="8" stroke="#FFD700" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="8" y1="0" x2="8" y2="5" stroke="#FFD700" stroke-width="1.5" stroke-linecap="round"/>
+</svg>
