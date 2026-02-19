@@ -1,43 +1,61 @@
 /* ===========================================================
-   Whack-a-Mole — Plastic Toy Edition + Mjölnir Cursor
+   Marvel Whack-a-Villain — Mjölnir Edition
+   Thor + Loki / Thanos / Mangog
    =========================================================== */
 
 /* --- Reset & Base --- */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  /* Plastic toy palette */
-  --toy-red:       #E53935;
-  --toy-red-light: #FF6F61;
-  --toy-red-dark:  #B71C1C;
-  --toy-blue:      #1E88E5;
-  --toy-blue-light:#64B5F6;
-  --toy-blue-dark: #0D47A1;
-  --toy-green:     #43A047;
-  --toy-green-lt:  #66BB6A;
-  --toy-green-dk:  #1B5E20;
-  --toy-yellow:    #FDD835;
-  --toy-yellow-lt: #FFF176;
-  --toy-yellow-dk: #F9A825;
-  --toy-orange:    #FB8C00;
-  --toy-purple:    #8E24AA;
-  --toy-body:      #E8D44D;
-  --toy-body-lt:   #F0E06A;
-  --toy-body-dk:   #C9A800;
-  --toy-bezel:     #D32F2F;
-  --toy-bezel-lt:  #EF5350;
-  --toy-bezel-dk:  #9A0007;
-  --toy-cream:     #FFF8E1;
-  --toy-brown:     #5D4037;
-  --toy-brown-lt:  #795548;
-  --hole-bg:       #3E2723;
-  --hole-rim:      #4E342E;
-  --mole-body:     #A1887F;
-  --mole-body-dk:  #795548;
-  --mole-belly:    #D7CCC8;
-  --mole-nose:     #FF80AB;
-  --gold-color:    #FFD740;
-  --gold-glow:     rgba(255,215,64,0.5);
+  /* Marvel palette */
+  --marvel-red:      #E23636;
+  --marvel-red-dk:   #B71C1C;
+  --marvel-blue:     #1E3A5F;
+  --marvel-blue-lt:  #2E5D8A;
+  --marvel-gold:     #F5C518;
+  --marvel-gold-dk:  #C9A800;
+  --marvel-silver:   #C0C0C0;
+
+  /* Thor */
+  --thor-blue:       #1565C0;
+  --thor-blue-lt:    #42A5F5;
+  --thor-cape-red:   #C62828;
+  --thor-skin:       #FFCC99;
+  --thor-hair:       #F5D076;
+  --thor-armor:      #546E7A;
+
+  /* Loki */
+  --loki-green:      #2E7D32;
+  --loki-green-lt:   #66BB6A;
+  --loki-green-dk:   #1B5E20;
+  --loki-gold:       #FFD54F;
+  --loki-skin:       #E0D5C0;
+
+  /* Thanos */
+  --thanos-purple:   #7B1FA2;
+  --thanos-purple-lt:#AB47BC;
+  --thanos-purple-dk:#4A148C;
+  --thanos-chin:     #9C27B0;
+  --thanos-gold:     #FFD740;
+
+  /* Mangog */
+  --mangog-orange:   #E65100;
+  --mangog-orange-lt:#FF8F00;
+  --mangog-red:      #BF360C;
+  --mangog-yellow:   #FFC107;
+  --mangog-skin:     #FF6D00;
+
+  /* Board / cabinet */
+  --toy-body:        #1A237E;
+  --toy-body-lt:     #283593;
+  --toy-body-dk:     #0D1642;
+  --toy-bezel:       #C62828;
+  --toy-bezel-lt:    #EF5350;
+  --toy-bezel-dk:    #8E0000;
+  --toy-brown:       #37474F;
+  --toy-brown-lt:    #546E7A;
+  --hole-bg:         #0D0D0D;
+  --hole-rim:        #1A1A2E;
 
   --font-title: 'Lilita One', 'Impact', sans-serif;
   --font-body:  'Nunito', 'Segoe UI', sans-serif;
@@ -62,21 +80,295 @@ body:active {
 body {
   font-family: var(--font-body);
   font-size: 14px;
-  /* Playful background pattern */
   background:
-    radial-gradient(circle at 20% 30%, #43CEA2 0%, transparent 50%),
-    radial-gradient(circle at 80% 70%, #FCEABB 0%, transparent 50%),
-    linear-gradient(135deg, #185A9D 0%, #43CEA2 100%);
+    radial-gradient(ellipse at 30% 20%, rgba(30,58,95,0.8) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 80%, rgba(123,31,162,0.3) 0%, transparent 50%),
+    linear-gradient(160deg, #0a0a1a 0%, #1a1a3e 40%, #0d0d2a 100%);
   background-attachment: fixed;
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
   padding: 16px;
+  overflow-x: hidden;
 }
 
 /* ===========================================================
-   PLASTIC TOY CABINET
+   LAYOUT WRAPPER (Thor + Cabinet side by side)
+   =========================================================== */
+.game-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  max-width: 780px;
+}
+
+/* ===========================================================
+   LIGHTNING FLASH (full-screen)
+   =========================================================== */
+.lightning-flash {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(100,181,246,0.6) 0%, rgba(30,136,229,0.15) 40%, transparent 70%);
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0;
+  transition: opacity 0.05s;
+}
+.lightning-flash.active {
+  opacity: 1;
+  animation: lightningPulse 0.15s ease-out;
+}
+@keyframes lightningPulse {
+  0%   { opacity: 1; }
+  50%  { opacity: 0.4; }
+  100% { opacity: 0; }
+}
+
+/* ===========================================================
+   THOR CHARACTER
+   =========================================================== */
+.thor-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.thor-label {
+  font-family: var(--font-title);
+  font-size: 16px;
+  color: var(--thor-blue-lt);
+  letter-spacing: 3px;
+  text-shadow: 0 0 10px rgba(66,165,245,0.5);
+}
+
+.thor-figure {
+  position: relative;
+  width: 110px;
+  height: 200px;
+  transition: transform 0.1s;
+}
+.thor-figure.swing {
+  animation: thorSwing 0.3s ease;
+}
+.thor-figure.triumphant {
+  animation: thorTriumph 0.5s ease;
+}
+.thor-figure.frustrated {
+  animation: thorFrustrated 0.4s ease;
+}
+@keyframes thorSwing {
+  0%   { transform: rotate(0deg); }
+  30%  { transform: rotate(8deg) translateX(5px); }
+  60%  { transform: rotate(-3deg); }
+  100% { transform: rotate(0deg); }
+}
+@keyframes thorTriumph {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(1.08) translateY(-5px); }
+  70%  { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+@keyframes thorFrustrated {
+  0%   { transform: translateX(0); }
+  20%  { transform: translateX(-4px); }
+  40%  { transform: translateX(4px); }
+  60%  { transform: translateX(-2px); }
+  80%  { transform: translateX(2px); }
+  100% { transform: translateX(0); }
+}
+
+/* Cape */
+.thor-cape {
+  position: absolute;
+  top: 52px; left: 12px;
+  width: 86px; height: 130px;
+  background: linear-gradient(180deg, var(--thor-cape-red) 0%, #8E0000 100%);
+  border-radius: 8px 8px 25px 25px;
+  z-index: 0;
+  animation: capeFlow 3s ease-in-out infinite;
+  clip-path: polygon(10% 0, 90% 0, 100% 60%, 95% 80%, 85% 95%, 60% 100%, 40% 100%, 15% 95%, 5% 80%, 0 60%);
+}
+@keyframes capeFlow {
+  0%, 100% { transform: skewX(0deg); }
+  25%      { transform: skewX(1.5deg); }
+  75%      { transform: skewX(-1.5deg); }
+}
+
+/* Head */
+.thor-head {
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 50px; height: 50px;
+  z-index: 3;
+}
+.thor-helmet {
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 52px; height: 28px;
+  background: linear-gradient(180deg, #78909C, var(--thor-armor));
+  border-radius: 50% 50% 30% 30%;
+  border: 2px solid #455A64;
+  z-index: 4;
+}
+.thor-wing {
+  position: absolute;
+  top: -6px;
+  width: 14px; height: 20px;
+  background: #CFD8DC;
+  border: 1.5px solid #90A4AE;
+  z-index: 5;
+}
+.thor-wing-l {
+  left: -4px;
+  border-radius: 50% 30% 0 50%;
+  transform: rotate(-20deg);
+}
+.thor-wing-r {
+  right: -4px;
+  border-radius: 30% 50% 50% 0;
+  transform: rotate(20deg);
+}
+
+.thor-hair {
+  position: absolute;
+  top: 16px; left: 50%;
+  transform: translateX(-50%);
+  width: 48px; height: 28px;
+  background: linear-gradient(180deg, var(--thor-hair), #D4A843);
+  border-radius: 0 0 40% 40%;
+  z-index: 2;
+}
+
+.thor-face {
+  position: absolute;
+  top: 18px; left: 50%;
+  transform: translateX(-50%);
+  width: 36px; height: 30px;
+  background: var(--thor-skin);
+  border-radius: 40% 40% 50% 50%;
+  z-index: 3;
+}
+.thor-eyes {
+  position: absolute;
+  top: 8px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; gap: 10px;
+}
+.thor-eye {
+  width: 6px; height: 6px;
+  background: #1565C0;
+  border-radius: 50%;
+  border: 1px solid #0D47A1;
+  box-shadow: inset 1px 1px 1px rgba(255,255,255,0.4);
+}
+/* Thor's eyes glow on hit */
+.thor-figure.triumphant .thor-eye {
+  background: #64B5F6;
+  box-shadow: 0 0 6px rgba(100,181,246,0.8);
+}
+.thor-beard {
+  position: absolute;
+  bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 24px; height: 10px;
+  background: linear-gradient(180deg, var(--thor-hair), #B8860B);
+  border-radius: 0 0 50% 50%;
+}
+
+/* Torso */
+.thor-torso {
+  position: absolute;
+  top: 48px; left: 50%;
+  transform: translateX(-50%);
+  width: 60px; height: 55px;
+  background: linear-gradient(180deg, var(--thor-armor) 0%, #37474F 100%);
+  border-radius: 12px 12px 8px 8px;
+  border: 2px solid #455A64;
+  z-index: 1;
+}
+.thor-chest-circles {
+  position: absolute;
+  top: 10px; left: 50%;
+  transform: translateX(-50%);
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  border: 3px solid var(--marvel-silver);
+  background: transparent;
+}
+
+/* Arms */
+.thor-arm {
+  position: absolute;
+  top: 52px;
+  width: 18px; height: 50px;
+  background: linear-gradient(180deg, var(--thor-armor), #37474F);
+  border-radius: 8px;
+  z-index: 2;
+  border: 1.5px solid #455A64;
+}
+.thor-arm-left {
+  left: 8px;
+  transform: rotate(10deg);
+}
+.thor-arm-right {
+  right: 2px;
+  transform-origin: top center;
+  transform: rotate(-15deg);
+  transition: transform 0.15s ease;
+}
+.thor-arm-right.swing {
+  animation: armSwing 0.3s ease;
+}
+@keyframes armSwing {
+  0%   { transform: rotate(-15deg); }
+  40%  { transform: rotate(-60deg) translateX(10px); }
+  100% { transform: rotate(-15deg); }
+}
+
+/* Hammer in Thor's hand */
+.thor-hammer {
+  position: absolute;
+  bottom: -8px; left: 50%;
+  transform: translateX(-50%) rotate(-45deg);
+  width: 30px; height: 40px;
+}
+.thor-hammer-head {
+  width: 30px; height: 16px;
+  background: linear-gradient(180deg, #CFD8DC, #90A4AE);
+  border-radius: 3px;
+  border: 1.5px solid #607D8B;
+  box-shadow: 0 0 8px rgba(66,165,245,0.4);
+}
+.thor-hammer-handle {
+  width: 6px; height: 22px;
+  background: linear-gradient(180deg, #8D6E63, #5D4037);
+  border-radius: 2px;
+  margin: 0 auto;
+  border: 1px solid #4E342E;
+}
+
+/* Legs */
+.thor-legs {
+  position: absolute;
+  bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  z-index: 1;
+}
+.thor-leg {
+  width: 20px; height: 50px;
+  background: linear-gradient(180deg, #1565C0, #0D47A1);
+  border-radius: 6px;
+  border: 1.5px solid #0D47A1;
+}
+
+/* ===========================================================
+   PLASTIC TOY CABINET (Marvel themed)
    =========================================================== */
 .toy-cabinet {
   width: 540px;
@@ -85,12 +377,11 @@ body {
   border-radius: 24px;
   border: 4px solid var(--toy-bezel-dk);
   box-shadow:
-    inset 0 2px 0 var(--toy-body-lt),
-    inset 0 -2px 0 var(--toy-body-dk),
-    0 8px 32px rgba(0,0,0,0.35),
-    0 2px 8px rgba(0,0,0,0.2);
+    inset 0 2px 0 rgba(255,255,255,0.1),
+    inset 0 -2px 0 rgba(0,0,0,0.3),
+    0 8px 32px rgba(0,0,0,0.5),
+    0 0 60px rgba(30,58,95,0.3);
   overflow: hidden;
-  /* Glossy plastic sheen */
   position: relative;
 }
 .toy-cabinet::before {
@@ -98,7 +389,7 @@ body {
   position: absolute;
   top: 0; left: 10%; right: 10%;
   height: 40%;
-  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, transparent 100%);
   border-radius: 24px 24px 50% 50%;
   pointer-events: none;
   z-index: 50;
@@ -119,76 +410,97 @@ body {
 }
 .toy-title {
   font-family: var(--font-title);
-  font-size: 32px;
-  color: var(--toy-yellow);
+  font-size: 28px;
+  color: var(--marvel-gold);
   text-shadow:
-    2px 2px 0 var(--toy-yellow-dk),
-    -1px -1px 0 rgba(0,0,0,0.3),
-    0 0 20px rgba(255,215,0,0.3);
+    2px 2px 0 var(--marvel-gold-dk),
+    -1px -1px 0 rgba(0,0,0,0.5),
+    0 0 20px rgba(245,197,24,0.4);
   letter-spacing: 3px;
 }
-/* Decorative plastic bulbs */
 .banner-bulb {
   width: 14px; height: 14px;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, #fff 0%, var(--toy-yellow) 50%, var(--toy-orange) 100%);
-  border: 2px solid var(--toy-yellow-dk);
-  box-shadow: 0 0 6px rgba(255,215,0,0.4);
+  background: radial-gradient(circle at 35% 35%, #fff 0%, var(--marvel-gold) 50%, #E65100 100%);
+  border: 2px solid var(--marvel-gold-dk);
+  box-shadow: 0 0 6px rgba(245,197,24,0.4);
   animation: bulbPulse 1.5s ease-in-out infinite alternate;
 }
 .banner-bulb:nth-child(2) { animation-delay: 0.3s; }
 .banner-bulb:nth-child(4) { animation-delay: 0.6s; }
 @keyframes bulbPulse {
-  0%   { box-shadow: 0 0 4px rgba(255,215,0,0.3); }
-  100% { box-shadow: 0 0 12px rgba(255,215,0,0.8); }
+  0%   { box-shadow: 0 0 4px rgba(245,197,24,0.3); }
+  100% { box-shadow: 0 0 12px rgba(245,197,24,0.8); }
 }
 
 /* ===========================================================
-   SCORE PANEL (gauges)
+   SCORE PANEL
    =========================================================== */
 .toy-panel {
   margin: 8px 12px;
   padding: 10px 12px;
-  background: linear-gradient(180deg, #D7CCC8, #BCAAA4);
+  background: linear-gradient(180deg, #263238, #1C2833);
   border-radius: 14px;
-  border: 3px solid var(--toy-brown);
+  border: 3px solid #37474F;
   box-shadow:
-    inset 0 2px 0 rgba(255,255,255,0.3),
-    inset 0 -2px 0 rgba(0,0,0,0.15),
-    0 2px 4px rgba(0,0,0,0.15);
+    inset 0 2px 0 rgba(255,255,255,0.05),
+    inset 0 -2px 0 rgba(0,0,0,0.3),
+    0 2px 4px rgba(0,0,0,0.2);
 }
 .score-panel {
   display: flex;
   justify-content: space-between;
   gap: 8px;
 }
-.toy-gauge {
-  flex: 1;
-  text-align: center;
-}
+.toy-gauge { flex: 1; text-align: center; }
 .gauge-label {
   display: block;
   font-family: var(--font-title);
   font-size: 11px;
-  color: var(--toy-brown);
+  color: var(--marvel-gold);
   letter-spacing: 1.5px;
   margin-bottom: 4px;
-  text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+  text-shadow: 0 0 4px rgba(245,197,24,0.3);
 }
 .gauge-screen {
   font-family: var(--font-mono);
   font-size: 22px;
   font-weight: 900;
-  color: #1B5E20;
-  background: linear-gradient(180deg, #C8E6C9, #A5D6A7);
-  border: 2px solid #66BB6A;
+  color: #64B5F6;
+  background: linear-gradient(180deg, #0D1B2A, #1B2838);
+  border: 2px solid #1E88E5;
   border-radius: 8px;
   padding: 4px 0;
   box-shadow:
-    inset 0 1px 3px rgba(0,0,0,0.2),
-    0 1px 0 rgba(255,255,255,0.4);
-  text-shadow: 0 1px 0 rgba(255,255,255,0.6);
+    inset 0 1px 3px rgba(0,0,0,0.4),
+    0 0 8px rgba(30,136,229,0.2);
+  text-shadow: 0 0 6px rgba(100,181,246,0.6);
 }
+
+/* ===========================================================
+   VILLAIN LEGEND BAR
+   =========================================================== */
+.villain-legend {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin: 4px 12px;
+  padding: 5px 0;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+}
+.legend-item {
+  color: #CFD8DC;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.5);
+}
+.legend-item small {
+  font-size: 10px;
+  opacity: 0.7;
+}
+.loki-legend { color: var(--loki-green-lt); }
+.mangog-legend { color: var(--mangog-orange-lt); }
+.thanos-legend { color: var(--thanos-purple-lt); }
 
 /* ===========================================================
    GAME BOARD
@@ -198,13 +510,14 @@ body {
   margin: 8px 12px;
   padding: 16px;
   background:
-    repeating-conic-gradient(#81C784 0% 25%, #66BB6A 0% 50%) 0 0 / 20px 20px;
+    radial-gradient(circle at 50% 50%, rgba(30,58,95,0.4) 0%, transparent 70%),
+    repeating-conic-gradient(#1a2744 0% 25%, #151f38 0% 50%) 0 0 / 20px 20px;
   border-radius: 16px;
-  border: 4px solid var(--toy-green-dk);
+  border: 4px solid #0D47A1;
   box-shadow:
-    inset 0 3px 8px rgba(0,0,0,0.25),
-    inset 0 -2px 0 rgba(255,255,255,0.1),
-    0 2px 6px rgba(0,0,0,0.15);
+    inset 0 3px 8px rgba(0,0,0,0.4),
+    inset 0 -2px 0 rgba(255,255,255,0.03),
+    0 2px 6px rgba(0,0,0,0.3);
 }
 
 .mole-grid {
@@ -215,145 +528,380 @@ body {
   margin: 0 auto;
 }
 
-/* --- Hole (plastic recess) --- */
+/* --- Hole (Bifrost recess) --- */
 .hole {
   position: relative;
   width: 100%;
   aspect-ratio: 1;
   background:
-    radial-gradient(ellipse 100% 60% at 50% 90%, #1A1006 0%, transparent 70%),
+    radial-gradient(ellipse 100% 60% at 50% 90%, #000 0%, transparent 70%),
     radial-gradient(ellipse 85% 45% at 50% 75%, var(--hole-bg) 0%, transparent 90%),
     linear-gradient(180deg, var(--hole-rim), var(--hole-bg));
   border-radius: 50%;
-  border: 4px solid var(--toy-brown);
+  border: 4px solid #263238;
   box-shadow:
-    inset 0 6px 16px rgba(0,0,0,0.6),
-    inset 0 -2px 4px rgba(255,255,255,0.05),
-    0 3px 0 var(--toy-brown-lt),
-    0 5px 8px rgba(0,0,0,0.2);
+    inset 0 6px 16px rgba(0,0,0,0.7),
+    inset 0 -2px 4px rgba(30,136,229,0.05),
+    0 3px 0 #37474F,
+    0 5px 8px rgba(0,0,0,0.3);
   overflow: hidden;
   user-select: none;
   transition: transform 0.08s;
 }
-.hole:active {
-  transform: scale(0.96);
+.hole:active { transform: scale(0.96); }
+
+/* Screen shake on Mangog hit */
+.toy-board.shake {
+  animation: boardShake 0.3s ease;
+}
+@keyframes boardShake {
+  0%, 100% { transform: translate(0); }
+  20%  { transform: translate(-3px, 2px); }
+  40%  { transform: translate(3px, -2px); }
+  60%  { transform: translate(-2px, 1px); }
+  80%  { transform: translate(2px, -1px); }
 }
 
-/* --- Mole (plastic figurine) --- */
-.mole {
+/* ===========================================================
+   VILLAIN BASE (replaces generic mole)
+   =========================================================== */
+.villain {
   position: absolute;
   bottom: -100%;
   left: 50%;
   transform: translateX(-50%);
-  width: 70%;
-  height: 65%;
+  width: 75%;
+  height: 68%;
   transition: bottom 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
   pointer-events: none;
+  z-index: 5;
 }
-.mole.show {
-  bottom: 8%;
-}
-.mole.whacked {
-  bottom: 8%;
+.villain.show { bottom: 5%; }
+.villain.whacked {
+  bottom: 5%;
   animation: whackSmash 0.35s ease;
 }
 
-.mole-body {
+.villain-body {
   width: 100%; height: 100%;
   position: relative;
 }
-.mole-head {
+
+/* --- LOKI --- */
+.villain.loki .villain-head {
   width: 82%; height: 72%;
   margin: 0 auto;
-  background: linear-gradient(160deg, #BCAAA4 0%, var(--mole-body) 40%, var(--mole-body-dk) 100%);
-  border-radius: 50% 50% 42% 42%;
+  background: linear-gradient(160deg, #E8DCC8 0%, var(--loki-skin) 50%, #C8B898 100%);
+  border-radius: 45% 45% 40% 40%;
   position: relative;
-  border: 3px solid var(--mole-body-dk);
-  box-shadow:
-    inset 0 -4px 8px rgba(0,0,0,0.15),
-    0 2px 6px rgba(0,0,0,0.3);
+  border: 2.5px solid #8D6E63;
+  box-shadow: inset 0 -3px 6px rgba(0,0,0,0.15), 0 2px 5px rgba(0,0,0,0.3);
 }
-/* Plastic highlight on mole head */
-.mole-head::before {
+/* Loki helmet */
+.villain.loki .villain-head::before {
   content: '';
   position: absolute;
-  top: 8%; left: 20%;
-  width: 35%; height: 25%;
-  background: radial-gradient(ellipse, rgba(255,255,255,0.5) 0%, transparent 100%);
+  top: -14px; left: 50%;
+  transform: translateX(-50%);
+  width: 90%; height: 45%;
+  background: linear-gradient(180deg, var(--loki-gold), #C9A800);
+  border-radius: 40% 40% 20% 20%;
+  border: 2px solid #8D6E63;
+  z-index: 2;
+}
+/* Loki horns */
+.villain.loki .villain-horn-l,
+.villain.loki .villain-horn-r {
+  position: absolute;
+  top: -28px;
+  width: 6px; height: 28px;
+  background: linear-gradient(180deg, var(--loki-gold), #A68B00);
+  border-radius: 3px 3px 0 0;
+  z-index: 3;
+  border: 1px solid #8D6E63;
+}
+.villain.loki .villain-horn-l {
+  left: 12%;
+  transform: rotate(-25deg);
+  transform-origin: bottom center;
+}
+.villain.loki .villain-horn-r {
+  right: 12%;
+  transform: rotate(25deg);
+  transform-origin: bottom center;
+}
+.villain.loki .villain-eyes {
+  position: absolute;
+  top: 35%; left: 50%;
+  transform: translateX(-50%);
+  display: flex; gap: 12px;
+}
+.villain.loki .villain-eye {
+  width: 9px; height: 10px;
+  background: radial-gradient(circle at 40% 35%, #2E7D32 60%, #1B5E20 100%);
   border-radius: 50%;
+  border: 1.5px solid #1B5E20;
+  box-shadow: inset 1px 1px 2px rgba(255,255,255,0.3);
+}
+.villain.loki .villain-mouth {
+  position: absolute;
+  top: 60%; left: 50%;
+  transform: translateX(-50%);
+  width: 18px; height: 7px;
+  border-bottom: 2.5px solid #5D4037;
+  border-radius: 0 0 50% 50%;
+}
+/* Loki smirk */
+.villain.loki .villain-mouth::after {
+  content: '';
+  position: absolute;
+  right: -4px; top: -2px;
+  width: 6px; height: 4px;
+  border-top: 2px solid #5D4037;
+  border-radius: 50% 50% 0 0;
 }
 
-/* Golden mole = shiny gold plastic */
-.mole.gold .mole-head {
-  background: linear-gradient(160deg, #FFF59D 0%, var(--gold-color) 40%, #F9A825 100%);
-  border-color: #E65100;
+/* --- THANOS --- */
+.villain.thanos .villain-head {
+  width: 88%; height: 75%;
+  margin: 0 auto;
+  background: linear-gradient(160deg, var(--thanos-purple-lt) 0%, var(--thanos-purple) 50%, var(--thanos-purple-dk) 100%);
+  border-radius: 42% 42% 48% 48%;
+  position: relative;
+  border: 2.5px solid var(--thanos-purple-dk);
   box-shadow:
-    inset 0 -4px 8px rgba(0,0,0,0.15),
-    0 0 16px var(--gold-glow),
-    0 2px 6px rgba(0,0,0,0.3);
+    inset 0 -4px 8px rgba(0,0,0,0.2),
+    0 0 16px rgba(171,71,188,0.4),
+    0 2px 6px rgba(0,0,0,0.35);
+}
+/* Thanos helmet */
+.villain.thanos .villain-head::before {
+  content: '';
+  position: absolute;
+  top: -6px; left: 50%;
+  transform: translateX(-50%);
+  width: 95%; height: 40%;
+  background: linear-gradient(180deg, var(--thanos-gold), #C9A800);
+  border-radius: 50% 50% 30% 30%;
+  border: 2px solid #8D6E63;
+  z-index: 2;
+}
+/* Thanos chin ridges */
+.villain.thanos .villain-chin {
+  position: absolute;
+  bottom: 2%; left: 50%;
+  transform: translateX(-50%);
+  width: 55%; height: 22%;
+  background: repeating-linear-gradient(
+    0deg,
+    var(--thanos-purple) 0px,
+    var(--thanos-purple) 3px,
+    var(--thanos-purple-dk) 3px,
+    var(--thanos-purple-dk) 5px
+  );
+  border-radius: 0 0 50% 50%;
+}
+.villain.thanos .villain-eyes {
+  position: absolute;
+  top: 38%; left: 50%;
+  transform: translateX(-50%);
+  display: flex; gap: 14px;
+  z-index: 3;
+}
+.villain.thanos .villain-eye {
+  width: 10px; height: 8px;
+  background: radial-gradient(circle at 50% 50%, #E1F5FE 30%, #42A5F5 100%);
+  border-radius: 30% 30% 50% 50%;
+  border: 1.5px solid #0D47A1;
+  box-shadow: 0 0 6px rgba(66,165,245,0.5);
+}
+.villain.thanos .villain-mouth {
+  position: absolute;
+  top: 60%; left: 50%;
+  transform: translateX(-50%);
+  width: 16px; height: 5px;
+  background: #4A148C;
+  border-radius: 2px;
+  z-index: 3;
+}
+/* Gauntlet glow */
+.villain.thanos::after {
+  content: '✊';
+  position: absolute;
+  bottom: 2px; right: 5%;
+  font-size: 16px;
+  filter: saturate(2) brightness(1.3);
+  animation: gauntletPulse 1s ease-in-out infinite alternate;
+}
+@keyframes gauntletPulse {
+  0%   { text-shadow: 0 0 4px rgba(255,215,64,0.4); }
+  100% { text-shadow: 0 0 12px rgba(255,215,64,0.9), 0 0 20px rgba(255,183,77,0.4); }
 }
 
-.mole-eyes {
+/* --- MANGOG --- */
+.villain.mangog .villain-head {
+  width: 86%; height: 74%;
+  margin: 0 auto;
+  background: linear-gradient(160deg, var(--mangog-orange-lt) 0%, var(--mangog-skin) 50%, var(--mangog-red) 100%);
+  border-radius: 40% 40% 45% 45%;
+  position: relative;
+  border: 2.5px solid var(--mangog-red);
+  box-shadow:
+    inset 0 -4px 8px rgba(0,0,0,0.2),
+    0 2px 6px rgba(0,0,0,0.35);
+}
+/* Mangog horns */
+.villain.mangog .villain-horn-l,
+.villain.mangog .villain-horn-r {
+  position: absolute;
+  top: -16px;
+  width: 8px; height: 22px;
+  background: linear-gradient(180deg, var(--mangog-yellow), var(--mangog-orange));
+  border-radius: 4px 4px 0 0;
+  z-index: 3;
+  border: 1.5px solid var(--mangog-red);
+}
+.villain.mangog .villain-horn-l {
+  left: 10%;
+  transform: rotate(-30deg);
+  transform-origin: bottom center;
+}
+.villain.mangog .villain-horn-r {
+  right: 10%;
+  transform: rotate(30deg);
+  transform-origin: bottom center;
+}
+.villain.mangog .villain-eyes {
   position: absolute;
   top: 30%; left: 50%;
   transform: translateX(-50%);
-  display: flex; gap: 14px;
+  display: flex; gap: 16px;
+  z-index: 3;
 }
-.mole-eye {
-  width: 11px; height: 13px;
-  background: radial-gradient(circle at 40% 35%, #333 60%, #000 100%);
-  border-radius: 50%;
-  border: 1.5px solid #222;
-  /* Plastic eyeball shine */
-  box-shadow: inset 2px 2px 2px rgba(255,255,255,0.6);
+.villain.mangog .villain-eye {
+  width: 11px; height: 9px;
+  background: radial-gradient(circle, #FFEB3B 30%, #FF6F00 100%);
+  border-radius: 40%;
+  border: 1.5px solid #BF360C;
+  box-shadow: 0 0 6px rgba(255,193,7,0.6);
 }
-.mole.whacked .mole-eye {
-  width: 13px; height: 4px;
+/* Mangog fangs */
+.villain.mangog .villain-mouth {
+  position: absolute;
+  top: 58%; left: 50%;
+  transform: translateX(-50%);
+  width: 22px; height: 10px;
+  background: #3E0000;
+  border-radius: 3px 3px 50% 50%;
+  overflow: visible;
+}
+.villain.mangog .villain-fang-l,
+.villain.mangog .villain-fang-r {
+  position: absolute;
+  bottom: -5px;
+  width: 4px; height: 7px;
+  background: #FFF;
+  border-radius: 0 0 2px 2px;
+}
+.villain.mangog .villain-fang-l { left: 3px; }
+.villain.mangog .villain-fang-r { right: 3px; }
+/* Mangog shoulders */
+.villain.mangog .villain-shoulders {
+  position: absolute;
+  bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 110%; height: 25%;
+  background: linear-gradient(180deg, var(--mangog-orange), var(--mangog-red));
+  border-radius: 40% 40% 0 0;
+  border: 2px solid var(--mangog-red);
+}
+
+/* --- Whacked state for all villains --- */
+.villain.whacked .villain-eye {
+  width: 10px; height: 3px;
   border-radius: 2px;
-  transform: rotate(-5deg);
-  box-shadow: none;
+  background: #333 !important;
+  box-shadow: none !important;
 }
-.mole-nose {
+
+/* --- Highlight on all villain heads --- */
+.villain .villain-shine {
   position: absolute;
-  top: 50%; left: 50%;
-  transform: translateX(-50%);
-  width: 16px; height: 12px;
-  background: radial-gradient(circle at 40% 35%, #FF80AB, var(--mole-nose));
+  top: 6%; left: 18%;
+  width: 30%; height: 20%;
+  background: radial-gradient(ellipse, rgba(255,255,255,0.35) 0%, transparent 100%);
   border-radius: 50%;
-  border: 1.5px solid #E91E63;
+  z-index: 4;
 }
-.mole-mouth {
+
+/* ===========================================================
+   HIT VFX
+   =========================================================== */
+
+/* Lightning bolt on hit */
+.lightning-bolt {
   position: absolute;
-  top: 66%; left: 50%;
+  top: 0; left: 50%;
   transform: translateX(-50%);
-  width: 20px; height: 8px;
-  border-bottom: 2.5px solid var(--mole-body-dk);
-  border-radius: 0 0 50% 50%;
+  width: 30px; height: 50px;
+  z-index: 20;
+  pointer-events: none;
+  animation: boltFlash 0.4s ease forwards;
 }
-.mole.whacked .mole-mouth {
-  border-bottom: none;
-  border-top: 2.5px solid var(--mole-body-dk);
-  border-radius: 50% 50% 0 0;
-  width: 26px; height: 12px;
-  top: 63%;
+.lightning-bolt svg { width: 100%; height: 100%; }
+@keyframes boltFlash {
+  0%   { opacity: 1; transform: translateX(-50%) scale(1.2); }
+  30%  { opacity: 0.8; transform: translateX(-50%) scale(1); }
+  100% { opacity: 0; transform: translateX(-50%) scale(0.5) translateY(-20px); }
+}
+
+/* Loki green mist */
+.loki-mist {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(46,125,50,0.6) 0%, rgba(46,125,50,0) 70%);
+  pointer-events: none;
+  z-index: 15;
+  animation: mistFade 0.6s ease forwards;
+}
+@keyframes mistFade {
+  0%   { opacity: 1; transform: scale(0.5); }
+  50%  { opacity: 0.7; transform: scale(1.3); }
+  100% { opacity: 0; transform: scale(1.8); }
+}
+
+/* Thanos snap particles */
+.snap-particle {
+  position: absolute;
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 15;
+  animation: snapFloat 0.7s ease forwards;
+}
+@keyframes snapFloat {
+  0%   { opacity: 1; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0); }
 }
 
 /* --- Score popup --- */
 .score-popup {
   position: absolute;
-  top: 15%; left: 50%;
+  top: 10%; left: 50%;
   transform: translateX(-50%);
   font-family: var(--font-title);
   font-size: 20px;
   font-weight: bold;
   pointer-events: none;
   animation: popBounce 0.65s ease forwards;
-  z-index: 10;
-  text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
+  z-index: 30;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
 }
-.score-popup.hit  { color: #2E7D32; }
-.score-popup.miss { color: #C62828; }
-.score-popup.gold { color: #E65100; }
+.score-popup.loki    { color: var(--loki-green-lt); }
+.score-popup.thanos  { color: var(--thanos-purple-lt); }
+.score-popup.mangog  { color: var(--mangog-orange-lt); }
+.score-popup.miss    { color: #EF5350; }
 
 @keyframes popBounce {
   0%   { opacity: 1; transform: translateX(-50%) translateY(0) scale(1.3); }
@@ -362,10 +910,9 @@ body {
 }
 @keyframes whackSmash {
   0%   { transform: translateX(-50%) rotate(0) scale(1); }
-  15%  { transform: translateX(-50%) rotate(-10deg) scale(0.9); }
-  30%  { transform: translateX(-50%) rotate(8deg) scale(0.92); }
-  50%  { transform: translateX(-50%) rotate(-5deg) scale(0.95); }
-  70%  { transform: translateX(-50%) rotate(3deg) scale(0.98); }
+  15%  { transform: translateX(-50%) rotate(-10deg) scale(0.85); }
+  30%  { transform: translateX(-50%) rotate(8deg) scale(0.88); }
+  50%  { transform: translateX(-50%) rotate(-5deg) scale(0.92); }
   100% { transform: translateX(-50%) rotate(0) scale(1); }
 }
 
@@ -374,30 +921,36 @@ body {
   position: absolute;
   inset: 4px;
   display: flex; justify-content: center; align-items: center;
-  background: rgba(255, 248, 225, 0.92);
+  background: rgba(10, 10, 30, 0.92);
   border-radius: 14px;
   z-index: 20;
   transition: opacity 0.3s;
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(3px);
 }
 .game-overlay.hidden { opacity: 0; pointer-events: none; }
-.overlay-inner { text-align: center; }
+.overlay-inner { text-align: center; padding: 16px; }
 .overlay-inner h2 {
   font-family: var(--font-title);
   font-size: 26px;
-  color: var(--toy-red);
+  color: var(--marvel-gold);
   margin-bottom: 10px;
-  text-shadow: 2px 2px 0 rgba(0,0,0,0.1);
+  text-shadow: 2px 2px 0 rgba(0,0,0,0.4), 0 0 15px rgba(245,197,24,0.3);
 }
 .overlay-inner p {
   font-family: var(--font-body);
   font-size: 14px;
-  color: var(--toy-brown);
+  color: #B0BEC5;
   line-height: 1.8;
+}
+.overlay-inner b {
+  color: var(--marvel-gold);
+}
+.overlay-inner small {
+  color: #78909C;
 }
 
 /* ===========================================================
-   TOY BUTTONS (chunky plastic pill-shape)
+   TOY BUTTONS
    =========================================================== */
 .control-panel {
   display: flex;
@@ -415,73 +968,234 @@ body {
   outline: none;
   position: relative;
   transition: transform 0.1s, box-shadow 0.1s;
-  text-shadow: 0 1px 0 rgba(255,255,255,0.3);
+  text-shadow: 0 1px 0 rgba(0,0,0,0.3);
 }
 .toy-btn::before {
-  /* Glossy plastic highlight */
   content: '';
   position: absolute;
   top: 2px; left: 15%; right: 15%;
   height: 40%;
-  background: linear-gradient(180deg, rgba(255,255,255,0.45) 0%, transparent 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.3) 0%, transparent 100%);
   border-radius: 28px 28px 50% 50%;
   pointer-events: none;
 }
 .toy-btn:active:not(:disabled) {
   transform: translateY(2px);
-  box-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.3) !important;
 }
-.toy-btn:disabled {
-  opacity: 0.5;
-  cursor: default;
-}
+.toy-btn:disabled { opacity: 0.4; cursor: default; }
 
 .toy-btn-green {
-  background: linear-gradient(180deg, var(--toy-green-lt), var(--toy-green));
-  border-color: var(--toy-green-dk);
+  background: linear-gradient(180deg, #66BB6A, #43A047);
+  border-color: #1B5E20;
   color: #fff;
-  box-shadow: 0 4px 0 var(--toy-green-dk), 0 6px 12px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 0 #1B5E20, 0 6px 12px rgba(0,0,0,0.3);
 }
 .toy-btn-yellow {
-  background: linear-gradient(180deg, var(--toy-yellow-lt), var(--toy-yellow));
-  border-color: var(--toy-yellow-dk);
-  color: var(--toy-brown);
-  box-shadow: 0 4px 0 var(--toy-yellow-dk), 0 6px 12px rgba(0,0,0,0.2);
+  background: linear-gradient(180deg, #FFF176, #FDD835);
+  border-color: #F9A825;
+  color: #3E2723;
+  box-shadow: 0 4px 0 #F9A825, 0 6px 12px rgba(0,0,0,0.3);
 }
 .toy-btn-red {
-  background: linear-gradient(180deg, var(--toy-red-light), var(--toy-red));
-  border-color: var(--toy-red-dark);
+  background: linear-gradient(180deg, #FF6F61, #E53935);
+  border-color: #B71C1C;
   color: #fff;
-  box-shadow: 0 4px 0 var(--toy-red-dark), 0 6px 12px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 0 #B71C1C, 0 6px 12px rgba(0,0,0,0.3);
 }
 
 /* ===========================================================
-   FOOTER STRIP
+   FOOTER
    =========================================================== */
 .toy-footer {
   display: flex; justify-content: space-between; align-items: center;
   padding: 6px 16px;
-  background: linear-gradient(180deg, var(--toy-body-dk), #B08D00);
+  background: linear-gradient(180deg, var(--toy-body-dk), #080818);
   font-size: 11px;
-  color: var(--toy-brown);
-  border-top: 2px solid var(--toy-body-dk);
+  color: #78909C;
+  border-top: 2px solid #263238;
   border-radius: 0 0 20px 20px;
 }
 .footer-badge {
   font-family: var(--font-title);
   font-size: 10px;
-  color: var(--toy-blue);
+  color: var(--thor-blue-lt);
   letter-spacing: 1px;
+  text-shadow: 0 0 6px rgba(66,165,245,0.4);
 }
 
 /* ===========================================================
    RESPONSIVE
    =========================================================== */
+@media (max-width: 760px) {
+  .game-wrapper {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .thor-container {
+    flex-direction: row;
+    gap: 12px;
+  }
+  .thor-figure { width: 70px; height: 130px; }
+  .thor-cape { top: 34px; left: 6px; width: 58px; height: 85px; }
+  .thor-head  { width: 34px; height: 34px; }
+  .thor-helmet { width: 36px; height: 20px; }
+  .thor-wing  { width: 10px; height: 14px; }
+  .thor-hair  { width: 32px; height: 18px; top: 12px; }
+  .thor-face  { width: 26px; height: 22px; top: 14px; }
+  .thor-torso { width: 42px; height: 38px; top: 32px; }
+  .thor-arm   { width: 13px; height: 34px; top: 36px; }
+  .thor-legs  { gap: 4px; }
+  .thor-leg   { width: 14px; height: 34px; }
+  .thor-hammer { width: 20px; height: 28px; }
+  .thor-hammer-head { width: 20px; height: 11px; }
+  .thor-hammer-handle { width: 4px; height: 16px; }
+}
 @media (max-width: 560px) {
   .toy-cabinet { border-radius: 16px; }
-  .toy-title { font-size: 22px; }
+  .toy-title { font-size: 20px; }
   .score-panel { flex-wrap: wrap; }
   .toy-gauge { min-width: 44%; }
   .mole-grid { gap: 10px; }
   .toy-btn { padding: 6px 14px; font-size: 12px; }
+  .villain-legend { gap: 8px; font-size: 10px; }
+}
+
+/* ===========================================================
+   PLAYER NAME MODAL
+   =========================================================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(8px);
+  animation: modalFadeIn 0.4s ease;
+}
+.modal-overlay.hidden {
+  display: none;
+}
+@keyframes modalFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.modal-card {
+  background: linear-gradient(145deg, #1a237e 0%, #0d1642 100%);
+  border: 3px solid var(--marvel-gold);
+  border-radius: 24px;
+  padding: 40px 36px;
+  text-align: center;
+  max-width: 420px;
+  width: 90%;
+  box-shadow:
+    0 0 40px rgba(245,197,24,0.2),
+    0 20px 60px rgba(0,0,0,0.5);
+}
+.modal-icon {
+  font-size: 56px;
+  margin-bottom: 8px;
+  animation: modalBolt 1.5s ease-in-out infinite;
+}
+@keyframes modalBolt {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.15) rotate(5deg); }
+}
+.modal-title {
+  font-family: var(--font-title);
+  font-size: 28px;
+  color: var(--marvel-gold);
+  text-shadow: 0 2px 8px rgba(245,197,24,0.4);
+  margin-bottom: 4px;
+}
+.modal-subtitle {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: #90caf9;
+  margin-bottom: 20px;
+}
+.modal-input {
+  display: block;
+  width: 100%;
+  padding: 14px 18px;
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(255,255,255,0.1);
+  border: 2px solid rgba(245,197,24,0.3);
+  border-radius: 14px;
+  outline: none;
+  text-align: center;
+  margin-bottom: 16px;
+  transition: border-color 0.2s;
+}
+.modal-input::placeholder { color: rgba(255,255,255,0.35); }
+.modal-input:focus {
+  border-color: var(--marvel-gold);
+  box-shadow: 0 0 12px rgba(245,197,24,0.2);
+}
+.modal-btn {
+  width: 100%;
+  font-size: 16px !important;
+  padding: 14px 24px !important;
+}
+
+/* ===========================================================
+   DAILY REPORT BUTTON
+   =========================================================== */
+.control-panel-2 {
+  display: flex;
+  justify-content: center;
+  padding: 0 12px 8px;
+}
+.toy-btn-mail {
+  background: linear-gradient(180deg, #42a5f5 0%, #1565c0 100%);
+  color: #fff;
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,0.25),
+    inset 0 -2px 0 rgba(0,0,0,0.2),
+    0 3px 0 #0d47a1,
+    0 5px 10px rgba(0,0,0,0.3);
+  font-size: 11px !important;
+  padding: 8px 16px !important;
+  border-radius: 10px;
+  letter-spacing: 0.5px;
+}
+.toy-btn-mail:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,0.15),
+    0 1px 0 #0d47a1;
+}
+.toy-btn-mail:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* ===========================================================
+   EMAIL SENDING TOAST / STATUS
+   =========================================================== */
+.email-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 14px 24px;
+  border-radius: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  z-index: 2000;
+  animation: toastSlide 0.3s ease;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+.email-toast.success { background: #2e7d32; }
+.email-toast.error   { background: #c62828; }
+.email-toast.sending { background: #1565c0; }
+@keyframes toastSlide {
+  from { transform: translateX(120%); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
 }
